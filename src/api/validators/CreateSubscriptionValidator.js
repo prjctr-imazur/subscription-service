@@ -1,10 +1,12 @@
 const joi = require('joi');
-const Validator = require('./Validator');
+const RequestValidator = require('./RequestValidator');
 
-class CreateSubscriptionValidator extends Validator {
+class CreateSubscriptionValidator extends RequestValidator {
   rules = joi.object().keys({
-    userId: joi.number().positive().required(),
-    subscriptionId: joi.number().positive().required(),
+    body: joi.object({
+      userId: joi.number().positive().required(),
+      subscriptionId: joi.number().positive().required(),
+    }),
   });
 }
 

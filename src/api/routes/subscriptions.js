@@ -1,4 +1,5 @@
-const { validateBody, validateQuery } = require('../middleware/validation');
+const { validate } = require('../middleware/validation');
+const respond = require('../helpers/respond');
 
 const SubscriptionValidator = require('../validators/SubscriptionValidator');
 const SubscriptionController = require('../controllers/SubscriptionController');
@@ -9,25 +10,25 @@ const CreateSubscriptionController = require('../controllers/CreateSubscriptionC
 function register(router) {
   router.get(
     '/subscriptions',
-    validateQuery(new SubscriptionValidator()),
+    validate(new SubscriptionValidator()),
     async (ctx) => {
       const controller = new SubscriptionController();
 
       const data = await controller.handle(ctx.request.query);
 
-      ctx.body = { data };
+      respond.success(ctx, data);
     }
   );
 
   router.post(
     '/subscriptions',
-    validateBody(new CreateSubscriptionValidator()),
+    validate(new CreateSubscriptionValidator()),
     async (ctx) => {
       const controller = new CreateSubscriptionController();
 
       const data = await controller.handle(ctx.request.body);
 
-      ctx.body = { data };
+      return data ? respond.success(ctx, data) : respond.notfound(ctx);
     }
   );
 }

@@ -1,30 +1,11 @@
-function makeRespond(ctx, errors) {
-  ctx.status = 422;
+const { failure } = require('../helpers/respond');
 
-  ctx.body = {
-    errors,
-  };
-}
-
-function validateBody(validator) {
+function validate(validator) {
   return async (ctx, next) => {
-    const { errors } = await validator.validate(ctx.request.body);
+    const { errors } = await validator.validate(ctx.request);
 
     if (errors !== null) {
-      makeRespond(ctx, errors);
-      return;
-    }
-
-    await next();
-  };
-}
-
-function validateQuery(validator) {
-  return async (ctx, next) => {
-    const { errors } = await validator.validate(ctx.request.query);
-
-    if (errors !== null) {
-      makeRespond(ctx, errors);
+      failure(ctx, errors, 400);
 
       return;
     }
@@ -34,6 +15,5 @@ function validateQuery(validator) {
 }
 
 module.exports = {
-  validateBody,
-  validateQuery,
+  validate,
 };
