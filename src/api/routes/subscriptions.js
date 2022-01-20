@@ -1,5 +1,5 @@
 const { validate } = require('../middleware/validation');
-const respond = require('../helpers/respond');
+const { respond } = require('../helpers/respond');
 
 const SubscriptionValidator = require('../validators/SubscriptionValidator');
 const SubscriptionController = require('../controllers/SubscriptionController');
@@ -16,7 +16,7 @@ function register(router) {
 
       const data = await controller.handle(ctx.request.query);
 
-      respond.success(ctx, data);
+      respond(ctx, data);
     }
   );
 
@@ -28,7 +28,7 @@ function register(router) {
 
       const data = await controller.handle(ctx.request.body);
 
-      return data ? respond.success(ctx, data) : respond.notfound(ctx);
+      return data ? respond(ctx, data) : respond(ctx, null, 404);
     }
   );
 }
